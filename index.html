@@ -36,8 +36,8 @@
         <div id="code" style="display: none;">
             <h4>Matlab</h4>
             <pre><code id="matlab" class="matlab">clc;<br/>clear;<br/></code></pre>
-            <h4>Python</h4>
-            <pre><code id="python" class="python">import csv<br/></code></pre>
+            <!-- <h4>Python</h4>
+            <pre><code id="python" class="python">import csv<br/></code></pre> -->
         </div>
     </div>
 
@@ -120,7 +120,7 @@
                         }
                         // console.log(file.name.split('.').slice(0, -1).join('.') + '-plot.csv');
                         downloadFile(file.name.split('.').slice(0, -1).join('.') + '-plot.csv', dataString);
-                        document.getElementById('matlab').innerHTML += "<br/>csvread('data.csv', 1, 0);";
+                        document.getElementById('matlab').innerHTML += "<br/>csvread('" + file.name + ".csv', 1, 0);";
                         document.getElementById('python').innerHTML += "<br/>csv";
                         hljs.highlightBlock(document.getElementById("matlab"));
                         hljs.highlightBlock(document.getElementById("python"));
