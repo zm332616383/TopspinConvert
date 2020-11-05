@@ -16,7 +16,10 @@
         type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/fileinput.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/themes/fa/theme.js"></script> -->
-
+    <!-- <link href="css/prism.css" rel="stylesheet" /> -->
+    <link rel="stylesheet" href="css/default.css">
+    <script src="js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 <body>
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid" style="background-color: #007bff;">
@@ -25,9 +28,20 @@
             </div>
         </div>
     </nav>
-    <div class="text-center" style="padding: 0.5rem 2.5rem;">
-        <input id="fileInput" type="file" class="file" multiple>
+    <div class="container">
+        <div id="infobar" class="alert alert-success" role="alert" style="display: none;"></div>
+        <div class="text-center" style="padding: 0rem 0.5rem 2.5rem 0.5rem;">
+            <input id="fileInput" type="file" class="file" multiple>
+        </div>
+        <div id="code" style="display: none;">
+            <h4>Matlab</h4>
+            <pre><code id="matlab" class="matlab">clc;<br/>clear;<br/></code></pre>
+            <h4>Python</h4>
+            <pre><code id="python" class="python">import csv<br/></code></pre>
+        </div>
     </div>
+
+    <!-- <script src="js/prism.js"></script> -->
     <script>
         function initFileInput(ctrlName) {
             var control = $('#' + ctrlName);
@@ -68,7 +82,9 @@
             });
             // console.log(intensity);
             if (chemShift.length != intensity.length) {
-                console.log("数组不一样长？");
+                document.getElementById('infobar').classList = 'alert alert-error';
+                document.getElementById('infobar').style.display = 'inherit';
+                document.getElementById('infobar').innerHTML = '数组不一样长';
             }
             return [chemShift, intensity]
         }
@@ -84,11 +100,13 @@
         function converter() {
         }
         window.onload = function () {
+            hljs.configure({useBR: true});
             document.getElementById('fileInput').addEventListener('change', function () {
                 if (this.files.length === 0) {
                     console.log('Empty file list!');
                     return;
                 }
+                document.getElementById('code').style.display = 'inherit';
                 for (let i = 0; i < this.files.length; i++) {
                     const file = this.files[i];
                     const reader = new FileReader();
@@ -102,6 +120,13 @@
                         }
                         // console.log(file.name.split('.').slice(0, -1).join('.') + '-plot.csv');
                         downloadFile(file.name.split('.').slice(0, -1).join('.') + '-plot.csv', dataString);
+                        document.getElementById('matlab').innerHTML += "<br/>csvread('data.csv', 1, 0);";
+                        document.getElementById('python').innerHTML += "<br/>csv";
+                        hljs.highlightBlock(document.getElementById("matlab"));
+                        hljs.highlightBlock(document.getElementById("python"));
+                        document.getElementById('infobar').classList = 'alert alert-success';
+                        document.getElementById('infobar').style.display = 'inherit';
+                        document.getElementById('infobar').innerHTML = 'Download Successful!';
                     }
                     reader.readAsText(file);
                 }
